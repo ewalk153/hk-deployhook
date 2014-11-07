@@ -30,7 +30,11 @@ func port() string {
 
 func NewRelicRequest(params *url.Values) {
 	pForm := url.Values{}
-	pForm.Set("deployment[app_name]", params.Get("app"))
+	if len(params.Get("app-override")) > 0 {
+		pForm.Set("deployment[app_name]", params.Get("app-override"))
+	} else {
+		pForm.Set("deployment[app_name]", params.Get("app"))
+	}
 	pForm.Set("deployment[description]", params.Get("git_log"))
 	pForm.Set("deployment[revision]", params.Get("head"))
 	pForm.Set("deployment[user]", params.Get("user"))
