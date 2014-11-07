@@ -51,11 +51,13 @@ func NewRelicRequest(params *url.Values) {
 }
 
 func main() {
+	log.Printf("AUTH_KEY %s", os.Getenv("AUTH_KEY"))
 	loadSite()
 	loadKey()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-		if r.RequestURI[1:] == authKey {
+		u, _ := url.Parse(r.RequestURI)
+		if u.Path[1:] == authKey {
 			NewRelicRequest(&r.Form)
 		} else {
 			log.Println("No post, auth does not match request:", r.RequestURI[1:])
